@@ -40,6 +40,9 @@ def ploting(nforplot,time_taken):
     plt.title('Linear Search Time Complexity')
     plt.grid(True)
     plt.show()
+    
+
+
 
 
 # Main execution
