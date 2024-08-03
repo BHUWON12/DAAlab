@@ -1,51 +1,30 @@
 import time
-import matplotlib.pyplot as plt
 
-def evaluate_polynomial_brute_force(coefficients, x):
-    n = len(coefficients)
+def brute_force_polynomial(coeffs, x):
     result = 0
-    for i in range(n):
-        result += coefficients[i] * (x ** i)
+    for i, coeff in enumerate(coeffs):
+        result += coeff * (x ** i)
     return result
 
-#### Horner’s Rule
-def evaluate_polynomial_horner(coefficients, x):
-    n = len(coefficients)
-    result = coefficients[n - 1]
-    for i in range(n - 2, -1, -1):
-        result = result * x + coefficients[i]
+def horners_rule(coeffs, x):
+    result = 0
+    for coeff in reversed(coeffs):
+        result = result * x + coeff
     return result
 
-def measure_polynomial_evaluation(coefficients, x):
-    start = time.time()
-    evaluate_polynomial_brute_force(coefficients, x)
-    end = time.time()
-    brute_force_time = (end - start) * 1000
+# Example coefficients for polynomial P(x) = 2x^3 + 3x^2 + 4x + 5
+coeffs = [5, 4, 3, 2]
+x = 2
 
-    start = time.time()
-    evaluate_polynomial_horner(coefficients, x)
-    end = time.time()
-    horner_time = (end - start) * 1000
+# Measure performance of brute-force method
+start_time = time.time()
+bf_result = brute_force_polynomial(coeffs, x)
+bf_time = time.time() - start_time
 
-    return brute_force_time, horner_time
+# Measure performance of Horner's rule
+start_time = time.time()
+hr_result = horners_rule(coeffs, x)
+hr_time = time.time() - start_time
 
-coefficients = [1, 2, 3, 4, 5]  # Example coefficients for polynomial 1 + 2x + 3x^2 + 4x^3 + 5x^4
-x = 2  # Example value of x
-n_values = list(range(1, 1001))
-brute_force_times = []
-horner_times = []
-
-for n in n_values:
-    coeffs = [i for i in range(n)]
-    bf_time, hr_time = measure_polynomial_evaluation(coeffs, x)
-    brute_force_times.append(bf_time)
-    horner_times.append(hr_time)
-
-plt.plot(n_values, brute_force_times, label='Brute-force')
-plt.plot(n_values, horner_times, label="Horner's Rule")
-plt.xlabel('Number of terms in polynomial')
-plt.ylabel('Time taken (milliseconds)')
-plt.title('Polynomial Evaluation Time Complexity')
-plt.legend()
-plt.grid(True)
-plt.show()
+print(f"Brute-Force Result: {bf_result}, Time: {bf_time:.10f} seconds")
+print(f"Horner's Rule Result: {hr_result}, Time: {hr_time:.10f} seconds")
